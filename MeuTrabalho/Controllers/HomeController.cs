@@ -41,10 +41,11 @@ namespace MeuTrabalho.Controllers
 
             try
             {
-                _logRepo.Insert("About");
+                _logRepo.Log("About", "INFO", DateTime.Now);
             }
             catch(Exception ex)
             {
+                _logRepo.Log(ex.ToString(), "Error", DateTime.Now);
                 ViewData["Message"] = "ERROR ABOUT";
             }
 
@@ -57,10 +58,11 @@ namespace MeuTrabalho.Controllers
 
             try
             {
-                _logRepo.Insert("Contact");
+                _logRepo.Log("Contact", "INFO", DateTime.Now);
             }
             catch(Exception ex)
             {
+                _logRepo.Log(ex.ToString(), "Error", DateTime.Now);
                 return RedirectToAction("Error");
             }
 

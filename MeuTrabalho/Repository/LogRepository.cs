@@ -21,18 +21,21 @@ namespace MeuTrabalho.Repository
             _command = command;
         }
 
-        public void Insert(string log)
+        public void Log(string log, string tipo, DateTime horaLogin)
         {
             _connection.ConnectionString = _configuration["ConnectionStrings:DefaultConnection"];
             _connection.Open();
-
-            _command.Connection = _connection;
-            _command.CommandType = CommandType.Text;
-            _command.CommandText = "INSERT tbLog VALUES (@llog)";
-            _command.Parameters.Add(new SqlParameter("@log", log));
-            _command.ExecuteNonQuery();
-
-            _connection.Close();
+            
+            using (_connection)
+            {
+                _command.Connection = _connection;
+                _command.CommandType = CommandType.Text;
+                _command.CommandText = "INSERT tbLog (Log, Tipo, HoraLogin) VALUES (@log, @tipo, @HoraLogin)";
+                _command.Parameters.Add(new SqlParameter("@log", log));
+                _command.Parameters.Add(new SqlParameter("@tipo", tipo));
+                _command.Parameters.Add(new SqlParameter("@HoraLogin", horaLogin));
+                _command.ExecuteNonQuery();
+            }
         }
     }
 }

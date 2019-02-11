@@ -7,6 +7,6 @@ namespace MeuTrabalho.Repository
 {
     public interface ILogRepository
     {
-        void Insert(string log);
+        void Log(string log, string tipo, DateTime horaLog);
     }
 }

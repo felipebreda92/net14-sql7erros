@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MeuTrabalho.Repository;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using System.Data.SqlClient;
 using System.Data;
-using MeuTrabalho.Repository;
+using System.Data.SqlClient;
 
 namespace MeuTrabalho
 {
@@ -27,6 +21,10 @@ namespace MeuTrabalho
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
+            //INJEÇÃO DE DEPENDENCIA
+
+            services.AddSingleton<AccountRepository>();
 
             services.AddScoped<IDbConnection, SqlConnection>();
             services.AddScoped<IDbCommand, SqlCommand>();

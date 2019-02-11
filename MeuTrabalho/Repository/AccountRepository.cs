@@ -20,18 +20,26 @@ namespace MeuTrabalho.Repository
 
         public string Login(LoginViewModel model)
         {
+            var username = "";
             _connection.ConnectionString = _configuration["ConnectionStrings:DefaultConnection"];
             _connection.Open();
 
-            _command.Connection = _connection;
-            _command.CommandType = CommandType.Text;
-            _command.CommandText = "SELECT username FROM tbLogin WHERE email = @email AND pwd = @password";
-            _command.Parameters.Add(new SqlParameter("@email", model.Email));
-            _command.Parameters.Add(new SqlParameter("@password", model.Password));
+            using (_connection)
+            {
+                _command.Connection = _connection;
+                _command.CommandType = CommandType.Text;
+                _command.CommandText = "SELECT username FROM tbLogin WHERE email = @email AND pwd = @password";
+                _command.Parameters.Add(new SqlParameter("@email", model.Email));
+                _command.Parameters.Add(new SqlParameter("@password", model.Password));
 
-            var username = (string)_command.ExecuteScalar();
+                var reader = _command.ExecuteReader();
 
-            _connection.Close();
+                while (reader.Read())
+                {
+                    username = (string)reader[0];
+                }
+            }
+
             return username;
         }
     }
