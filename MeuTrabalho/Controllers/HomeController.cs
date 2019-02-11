@@ -6,16 +6,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MeuTrabalho.Models;
 using System.Data.SqlClient;
+using MeuTrabalho.Repository;
 
 namespace MeuTrabalho.Controllers
 {
     public class HomeController : Controller, IDisposable
     {
-        SqlConnection connection;
+        private ILogRepository _logRepo;
 
-        public HomeController()
+        public HomeController(ILogRepository logRepository)
         {
-            this.connection = new SqlConnection("Server=saturnoserver.database.windows.net;Database=MEUDB;User=app;Password=homework-jan31;Max Pool Size=10");
+            _logRepo = logRepository;
         }
 
         public IActionResult Index()
@@ -40,10 +41,7 @@ namespace MeuTrabalho.Controllers
 
             try
             {
-                this.connection.Open();
-
-                SqlCommand sql = new SqlCommand("INSERT tbLog VALUES ('about')", this.connection);
-                sql.ExecuteReader();                
+                _logRepo.Insert("About");
             }
             catch(Exception ex)
             {
@@ -59,12 +57,7 @@ namespace MeuTrabalho.Controllers
 
             try
             {
-                SqlConnection conn1 = this.connection;
-
-                SqlCommand sql = new SqlCommand("INSERT tbLog VALUES ('contact')");
-                sql.Connection = conn1;
-
-                sql.ExecuteScalar();
+                _logRepo.Insert("Contact");
             }
             catch(Exception ex)
             {

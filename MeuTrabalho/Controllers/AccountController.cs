@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MeuTrabalho.Models;
+using MeuTrabalho.Repository;
 using Microsoft.AspNetCore.Mvc;
-using MeuTrabalho.Models;
-using System.Data.SqlClient;
+using System;
 
 namespace MeuTrabalho.Controllers
 {
     public class AccountController : Controller
     {
+        private IAccountRepository _accountRepo;
+
+        public AccountController(IAccountRepository accountRepository)
+        {
+            _accountRepo = accountRepository;
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
@@ -23,13 +26,7 @@ namespace MeuTrabalho.Controllers
         {
             try
             {
-                SqlConnection connection = new SqlConnection("Server=saturnoserver.database.windows.net;Database=MEUDB;User=aclogin;Password=homework-jan31");
-                SqlCommand cmd = new SqlCommand($"SELECT username FROM tbLogin WHERE email='{model.Email}' AND pwd='{model.Password}'", connection);
-
-                connection.Open();
-                string username = (string)cmd.ExecuteScalar();
-
-                connection.Close();
+                var username = _accountRepo.Login(model);
 
                 return RedirectToAction("Dashboard", "Home", new { name = username});
             }
